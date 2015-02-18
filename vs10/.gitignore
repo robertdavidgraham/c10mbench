@@ -1,0 +1,7 @@
+c10mbench.opensdf
+c10mbench.sdf
+c10mbench.suo
+c10mbench.vcxproj.user
+ipch
+x64
+!.gitignore
