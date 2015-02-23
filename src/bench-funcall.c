@@ -17,7 +17,7 @@
 void
 bench_funcall(void (*addx)(volatile unsigned *a, unsigned b))
 {
-    uint64_t start, stop;
+    unsigned long long start, stop;
     size_t i;
     volatile unsigned result = 0;
 
@@ -33,8 +33,8 @@ bench_funcall(void (*addx)(volatile unsigned *a, unsigned b))
         double ellapsed = (stop-start)/1000000.0;
         double speed = BENCH_ITERATIONS2*1.0/ellapsed;
         printf("\nbenchmark: function call rate\n");
-        printf("stop  = %lu\n", stop);
-        printf("start = %lu\n", start);
+        printf("stop  = %llu\n", stop);
+        printf("start = %llu\n", start);
         //printf("verifier: %u = %u\n", (unsigned)(result/getpid()), BENCH_ITERATIONS2);
         printf("verifier: %u\n", result);
         printf("rate = %5.2f mega-msgs/sec\n", speed/1000000.0);

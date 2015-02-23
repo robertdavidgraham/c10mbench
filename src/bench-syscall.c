@@ -7,11 +7,12 @@
 #ifdef WIN32
 #include <process.h>
 #define getpid _getpid
+#define read _read 
 #else
 #include <unistd.h>
 #endif
 
-#define BENCH_ITERATIONS2 ((BENCH_ITERATIONS)*100)
+#define BENCH_ITERATIONS2 ((BENCH_ITERATIONS)*1)
 
 
 void
@@ -24,7 +25,11 @@ bench_syscall(void)
 
     start = pixie_gettime();
     for (i=0; i<BENCH_ITERATIONS2; i++) {
-        result += _read(0,0,0);
+#ifdef WIN32
+        result += read(0,0,0);
+#else
+        result += time(0);
+#endif
     }
     stop = pixie_gettime();
 

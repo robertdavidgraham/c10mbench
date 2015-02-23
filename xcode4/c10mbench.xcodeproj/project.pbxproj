@@ -1,0 +1,255 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1143D0CA1A9B102300CAC03D /* bench-cachebounce.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0BB1A9B102300CAC03D /* bench-cachebounce.c */; };
+		1143D0CB1A9B102300CAC03D /* bench-funcall.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0BC1A9B102300CAC03D /* bench-funcall.c */; };
+		1143D0CC1A9B102300CAC03D /* bench-msgrate-pipe.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0BD1A9B102300CAC03D /* bench-msgrate-pipe.c */; };
+		1143D0CD1A9B102300CAC03D /* bench-msgrate-ring.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0BE1A9B102300CAC03D /* bench-msgrate-ring.c */; };
+		1143D0CE1A9B102300CAC03D /* bench-syscall.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0BF1A9B102300CAC03D /* bench-syscall.c */; };
+		1143D0CF1A9B102300CAC03D /* c10mbench.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0C01A9B102300CAC03D /* c10mbench.c */; };
+		1143D0D01A9B102300CAC03D /* pixie-threads.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0C21A9B102300CAC03D /* pixie-threads.c */; };
+		1143D0D11A9B102300CAC03D /* pixie-timer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0C41A9B102300CAC03D /* pixie-timer.c */; };
+		1143D0D21A9B102300CAC03D /* rte-ring.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0C61A9B102300CAC03D /* rte-ring.c */; };
+		1143D0D31A9B102300CAC03D /* string_s.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0C81A9B102300CAC03D /* string_s.c */; };
+		1143D0D51A9B111E00CAC03D /* main-version.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0D41A9B111E00CAC03D /* main-version.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1143D08E1A96DC3F00CAC03D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1143D0901A96DC3F00CAC03D /* c10mbench */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = c10mbench; sourceTree = BUILT_PRODUCTS_DIR; };
+		1143D0BB1A9B102300CAC03D /* bench-cachebounce.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "bench-cachebounce.c"; path = "../../src/bench-cachebounce.c"; sourceTree = "<group>"; };
+		1143D0BC1A9B102300CAC03D /* bench-funcall.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "bench-funcall.c"; path = "../../src/bench-funcall.c"; sourceTree = "<group>"; };
+		1143D0BD1A9B102300CAC03D /* bench-msgrate-pipe.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "bench-msgrate-pipe.c"; path = "../../src/bench-msgrate-pipe.c"; sourceTree = "<group>"; };
+		1143D0BE1A9B102300CAC03D /* bench-msgrate-ring.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "bench-msgrate-ring.c"; path = "../../src/bench-msgrate-ring.c"; sourceTree = "<group>"; };
+		1143D0BF1A9B102300CAC03D /* bench-syscall.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "bench-syscall.c"; path = "../../src/bench-syscall.c"; sourceTree = "<group>"; };
+		1143D0C01A9B102300CAC03D /* c10mbench.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = c10mbench.c; path = ../../src/c10mbench.c; sourceTree = "<group>"; };
+		1143D0C11A9B102300CAC03D /* c10mbench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = c10mbench.h; path = ../../src/c10mbench.h; sourceTree = "<group>"; };
+		1143D0C21A9B102300CAC03D /* pixie-threads.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "pixie-threads.c"; path = "../../src/pixie-threads.c"; sourceTree = "<group>"; };
+		1143D0C31A9B102300CAC03D /* pixie-threads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "pixie-threads.h"; path = "../../src/pixie-threads.h"; sourceTree = "<group>"; };
+		1143D0C41A9B102300CAC03D /* pixie-timer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "pixie-timer.c"; path = "../../src/pixie-timer.c"; sourceTree = "<group>"; };
+		1143D0C51A9B102300CAC03D /* pixie-timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "pixie-timer.h"; path = "../../src/pixie-timer.h"; sourceTree = "<group>"; };
+		1143D0C61A9B102300CAC03D /* rte-ring.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "rte-ring.c"; path = "../../src/rte-ring.c"; sourceTree = "<group>"; };
+		1143D0C71A9B102300CAC03D /* rte-ring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "rte-ring.h"; path = "../../src/rte-ring.h"; sourceTree = "<group>"; };
+		1143D0C81A9B102300CAC03D /* string_s.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = string_s.c; path = ../../src/string_s.c; sourceTree = "<group>"; };
+		1143D0C91A9B102300CAC03D /* string_s.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = string_s.h; path = ../../src/string_s.h; sourceTree = "<group>"; };
+		1143D0D41A9B111E00CAC03D /* main-version.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "main-version.c"; path = "../../src/main-version.c"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1143D08D1A96DC3F00CAC03D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1143D0851A96DC3F00CAC03D = {
+			isa = PBXGroup;
+			children = (
+				1143D0931A96DC3F00CAC03D /* c10mbench */,
+				1143D0911A96DC3F00CAC03D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1143D0911A96DC3F00CAC03D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1143D0901A96DC3F00CAC03D /* c10mbench */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1143D0931A96DC3F00CAC03D /* c10mbench */ = {
+			isa = PBXGroup;
+			children = (
+				1143D0D41A9B111E00CAC03D /* main-version.c */,
+				1143D0BB1A9B102300CAC03D /* bench-cachebounce.c */,
+				1143D0BC1A9B102300CAC03D /* bench-funcall.c */,
+				1143D0BD1A9B102300CAC03D /* bench-msgrate-pipe.c */,
+				1143D0BE1A9B102300CAC03D /* bench-msgrate-ring.c */,
+				1143D0BF1A9B102300CAC03D /* bench-syscall.c */,
+				1143D0C01A9B102300CAC03D /* c10mbench.c */,
+				1143D0C11A9B102300CAC03D /* c10mbench.h */,
+				1143D0C21A9B102300CAC03D /* pixie-threads.c */,
+				1143D0C31A9B102300CAC03D /* pixie-threads.h */,
+				1143D0C41A9B102300CAC03D /* pixie-timer.c */,
+				1143D0C51A9B102300CAC03D /* pixie-timer.h */,
+				1143D0C61A9B102300CAC03D /* rte-ring.c */,
+				1143D0C71A9B102300CAC03D /* rte-ring.h */,
+				1143D0C81A9B102300CAC03D /* string_s.c */,
+				1143D0C91A9B102300CAC03D /* string_s.h */,
+			);
+			path = c10mbench;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1143D08F1A96DC3F00CAC03D /* c10mbench */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1143D09A1A96DC3F00CAC03D /* Build configuration list for PBXNativeTarget "c10mbench" */;
+			buildPhases = (
+				1143D08C1A96DC3F00CAC03D /* Sources */,
+				1143D08D1A96DC3F00CAC03D /* Frameworks */,
+				1143D08E1A96DC3F00CAC03D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = c10mbench;
+			productName = c10mbench;
+			productReference = 1143D0901A96DC3F00CAC03D /* c10mbench */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1143D0871A96DC3F00CAC03D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 1143D08A1A96DC3F00CAC03D /* Build configuration list for PBXProject "c10mbench" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1143D0851A96DC3F00CAC03D;
+			productRefGroup = 1143D0911A96DC3F00CAC03D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1143D08F1A96DC3F00CAC03D /* c10mbench */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1143D08C1A96DC3F00CAC03D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1143D0CA1A9B102300CAC03D /* bench-cachebounce.c in Sources */,
+				1143D0CB1A9B102300CAC03D /* bench-funcall.c in Sources */,
+				1143D0CC1A9B102300CAC03D /* bench-msgrate-pipe.c in Sources */,
+				1143D0CD1A9B102300CAC03D /* bench-msgrate-ring.c in Sources */,
+				1143D0CE1A9B102300CAC03D /* bench-syscall.c in Sources */,
+				1143D0CF1A9B102300CAC03D /* c10mbench.c in Sources */,
+				1143D0D01A9B102300CAC03D /* pixie-threads.c in Sources */,
+				1143D0D11A9B102300CAC03D /* pixie-timer.c in Sources */,
+				1143D0D21A9B102300CAC03D /* rte-ring.c in Sources */,
+				1143D0D31A9B102300CAC03D /* string_s.c in Sources */,
+				1143D0D51A9B111E00CAC03D /* main-version.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1143D0981A96DC3F00CAC03D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1143D0991A96DC3F00CAC03D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1143D09B1A96DC3F00CAC03D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1143D09C1A96DC3F00CAC03D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1143D08A1A96DC3F00CAC03D /* Build configuration list for PBXProject "c10mbench" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1143D0981A96DC3F00CAC03D /* Debug */,
+				1143D0991A96DC3F00CAC03D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1143D09A1A96DC3F00CAC03D /* Build configuration list for PBXNativeTarget "c10mbench" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1143D09B1A96DC3F00CAC03D /* Debug */,
+				1143D09C1A96DC3F00CAC03D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1143D0871A96DC3F00CAC03D /* Project object */;
+}

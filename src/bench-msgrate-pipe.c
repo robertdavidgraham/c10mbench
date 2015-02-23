@@ -1,6 +1,7 @@
 #include "c10mbench.h"
 #include "pixie-timer.h"
 #include "pixie-threads.h"
+#include <stdlib.h>
 
 #if defined(WIN32)
 #include <Windows.h>

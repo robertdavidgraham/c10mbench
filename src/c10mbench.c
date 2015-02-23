@@ -8,8 +8,12 @@ void add_two_numbers(volatile unsigned *a, unsigned b)
     *a += b;
 }
 
+void print_version(void);
+
 int main(int argc, char *argv[])
 {
+    print_version();
+
     printf("--- C10M low-level benchmarks ---\n");
 
 #if defined(WIN32)
