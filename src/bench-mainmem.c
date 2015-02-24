@@ -80,6 +80,7 @@ bench_mainmem(unsigned cpu_count)
     parms->memsize = pixie_get_memsize()/8;
     parms->pointer = NULL;
     while (parms->pointer == NULL) {
+    fprintf(stderr, "memsize = %llu\n", (uint64_t)parms->memsize);
         parms->pointer = (unsigned char*)malloc((size_t)parms->memsize);
         if (parms->pointer == NULL)
             parms->memsize /= 2;
@@ -108,7 +109,7 @@ bench_mainmem(unsigned cpu_count)
             parms2->id = j;
             thread_handles[thread_count++] = pixie_begin_thread(worker_thread, 0, parms2);
         }
-        for (j=0; j<thread_handles[j]; j++)
+        for (j=0; j<thread_count; j++)
             pixie_join(thread_handles[j], 0);
         stop = pixie_gettime();
         
