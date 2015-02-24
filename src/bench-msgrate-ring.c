@@ -4,7 +4,7 @@
 #include "rte-ring.h"
 #include <stdlib.h>
 
-#define BENCH_ITERATIONS2 ((BENCH_ITERATIONS)*100)
+#define BENCH_ITERATIONS2 ((BENCH_ITERATIONS)*20)
 
 uint64_t verifier1, verifier2;
 
@@ -111,7 +111,7 @@ bench_msgrate_ring(unsigned cpu_count)
         
         ellapsed = (stop-start)/1000000.0;
         speed = (BENCH_ITERATIONS2*1.0)/ellapsed;
-        printf("ring,        %2u-cpus, %7.3f-mmsgs/s,   %6.1f-nsec, ww=%llu, rw=%llu\n",
+        printf("ring,        %2u,  %7.3f,  %7.1f, ww=%llu, rw=%llu\n",
                (unsigned)thread_count,
                speed/1000000.0,
                1000000000.0/speed,

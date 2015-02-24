@@ -18,7 +18,7 @@
 #define BENCH_ITERATIONS2 ((BENCH_ITERATIONS)*10)
 
 struct MainmemParms {
-    size_t memsize;
+    uint64_t memsize;
     unsigned char *pointer;
     unsigned result;
     unsigned id;
@@ -55,9 +55,9 @@ worker_thread(void *v_parms)
     unsigned result = 0;
     unsigned char *pointer = parms->pointer;
     size_t offset = 0;
-    size_t memsize = parms->memsize;
+    size_t memsize = (size_t)parms->memsize;
     
-    pixie_cpu_set_affinity(parms->id);
+    //pixie_cpu_set_affinity(parms->id);
     
     for (i=0; i<BENCH_ITERATIONS2; i++) {
         result += pointer[offset];
@@ -77,9 +77,14 @@ bench_mainmem(unsigned cpu_count)
     size_t i;
     struct MainmemParms parms[1];
     
-    parms->memsize = pixie_get_memsize()/2;
-    parms->pointer = (unsigned char*)malloc(parms->memsize);
-    memset(parms->pointer, 0, parms->memsize);
+    parms->memsize = pixie_get_memsize()/8;
+    parms->pointer = NULL;
+    while (parms->pointer == NULL) {
+        parms->pointer = (unsigned char*)malloc((size_t)parms->memsize);
+        if (parms->pointer == NULL)
+            parms->memsize /= 2;
+    }
+    memset(parms->pointer, 0, (size_t)parms->memsize);
     parms->result = 0;
 
     fprintf(stderr, "memsize = %llu\n", (uint64_t)parms->memsize);
@@ -111,7 +116,7 @@ bench_mainmem(unsigned cpu_count)
         ellapsed = (stop-start)/1000000.0;
         speed = BENCH_ITERATIONS2*1.0/ellapsed;
         
-        printf("mainmem,     %2u-cpus, %7.3f-mmsgs/s,   %6.1f-nsec\n",
+        printf("mainmem,     %2u,  %7.3f,  %7.1f\n",
                (unsigned)thread_count,
                speed/1000000.0,
                1000000000.0/speed);

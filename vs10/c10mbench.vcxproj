@@ -138,10 +138,13 @@
   <ItemGroup>
     <ClCompile Include="..\src\bench-cachebounce.c" />
     <ClCompile Include="..\src\bench-funcall.c" />
+    <ClCompile Include="..\src\bench-mainmem.c" />
     <ClCompile Include="..\src\bench-msgrate-pipe.c" />
     <ClCompile Include="..\src\bench-msgrate-ring.c" />
     <ClCompile Include="..\src\bench-syscall.c" />
     <ClCompile Include="..\src\c10mbench.c" />
+    <ClCompile Include="..\src\main-version.c" />
+    <ClCompile Include="..\src\pixie-memsize.c" />
     <ClCompile Include="..\src\pixie-threads.c" />
     <ClCompile Include="..\src\pixie-timer.c" />
     <ClCompile Include="..\src\rte-ring.c" />
@@ -149,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\c10mbench.h" />
+    <ClInclude Include="..\src\pixie-memsize.h" />
     <ClInclude Include="..\src\pixie-threads.h" />
     <ClInclude Include="..\src\pixie-timer.h" />
     <ClInclude Include="..\src\rte-ring.h" />

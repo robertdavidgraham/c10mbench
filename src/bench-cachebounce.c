@@ -45,7 +45,7 @@ bench_cache_bounce(unsigned cpu_count)
 
         ellapsed = (stop-start)/1000000.0;
         speed = BENCH_ITERATIONS2*1.0/ellapsed;
-        printf("cachebounce, %2u-cpus, %7.3f-mmsgs/s,   %6.1f-nsec\n",
+        printf("cachebounce, %2u,  %7.3f,  %7.1f\n",
                (unsigned)thread_count,
                speed/1000000.0,
                1000000000.0/speed);

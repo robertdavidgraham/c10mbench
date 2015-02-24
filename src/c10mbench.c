@@ -34,6 +34,8 @@ main(int argc, char *argv[])
     /*
      * Run all the benchmarks
      */
+    printf("          ,CPUs,   Mm/sec,    nsecs\n");
+
     bench_mainmem(cpu_count);
     bench_cache_bounce(cpu_count);
     bench_syscall(cpu_count);

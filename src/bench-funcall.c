@@ -62,7 +62,7 @@ bench_funcall(unsigned cpu_count, void (*addx)(volatile unsigned *a, unsigned b)
         ellapsed = (stop-start)/1000000.0;
         speed = BENCH_ITERATIONS2*1.0/ellapsed;
         
-        printf("funcall,     %2u-cpus, %7.3f-mmsgs/s,   %6.1f-nsec\n",
+        printf("funcall,     %2u,  %7.3f,  %7.1f\n",
                (unsigned)thread_count,
                speed/1000000.0,
                1000000000.0/speed);

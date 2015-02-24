@@ -7,13 +7,14 @@
 
 #ifdef WIN32
 #include <process.h>
+#include <io.h>
 #define getpid _getpid
 #define read _read 
 #else
 #include <unistd.h>
 #endif
 
-#define BENCH_ITERATIONS2 ((BENCH_ITERATIONS)*1)
+#define BENCH_ITERATIONS2 ((BENCH_ITERATIONS)/10)
 static uint64_t verifier;
 
 /******************************************************************************
@@ -54,15 +55,17 @@ bench_syscall(unsigned cpu_count)
         for (j=0; j<=i; j++) {
             thread_handles[thread_count++] = pixie_begin_thread(worker_thread, 0, 0);
         }
-        for (j=0; j<thread_handles[j]; j++)
+        for (j=0; j<thread_handles[j]; j++) {
             pixie_join(thread_handles[j], 0);
+            printf("", j);
+        }
         stop = pixie_gettime();
         
         
         ellapsed = (stop-start)/1000000.0;
         speed = BENCH_ITERATIONS2*1.0/ellapsed;
         
-        printf("syscall,     %2u-cpus, %7.3f-mmsgs/s,   %6.1f-nsec\n",
+        printf("syscall,     %2u,  %7.3f,  %7.1f\n",
                (unsigned)thread_count,
                speed/1000000.0,
                1000000000.0/speed);
