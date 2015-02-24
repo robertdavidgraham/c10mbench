@@ -54,7 +54,7 @@ bench_funcall(unsigned cpu_count, void (*addx)(volatile unsigned *a, unsigned b)
         for (j=0; j<=i; j++) {
             thread_handles[thread_count++] = pixie_begin_thread(worker_thread, 0, addx);
         }
-        for (j=0; j<thread_handles[j]; j++)
+        for (j=0; j<thread_count; j++)
             pixie_join(thread_handles[j], 0);
         stop = pixie_gettime();
         

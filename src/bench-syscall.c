@@ -55,7 +55,7 @@ bench_syscall(unsigned cpu_count)
         for (j=0; j<=i; j++) {
             thread_handles[thread_count++] = pixie_begin_thread(worker_thread, 0, 0);
         }
-        for (j=0; j<thread_handles[j]; j++) {
+        for (j=0; j<thread_count; j++) {
             pixie_join(thread_handles[j], 0);
             printf("", j);
         }

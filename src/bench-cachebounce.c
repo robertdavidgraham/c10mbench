@@ -38,7 +38,7 @@ bench_cache_bounce(unsigned cpu_count)
         for (j=0; j<=i; j += 1) {
             thread_handles[thread_count++] = pixie_begin_thread(worker_thread, 0, 0);
         }
-        for (j=0; j<thread_handles[j]; j++)
+        for (j=0; j<thread_count; j++)
             pixie_join(thread_handles[j], 0);
         stop = pixie_gettime();
 

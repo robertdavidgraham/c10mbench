@@ -105,7 +105,7 @@ bench_msgrate_ring(unsigned cpu_count)
             thread_handles[thread_count++] = pixie_begin_thread(reader, 0, ring);
             thread_handles[thread_count++] = pixie_begin_thread(writer, 0, ring);
         }
-        for (j=0; j<thread_handles[j]; j++)
+        for (j=0; j<thread_count; j++)
             pixie_join(thread_handles[j], 0);
         stop = pixie_gettime();
         
