@@ -69,7 +69,7 @@ endif
 CC = gcc
 
 DEFINES = 
-CFLAGS = -g -ggdb $(FLAGS2) $(INCLUDES) $(DEFINES) -Wall 
+CFLAGS = -g -ggdb $(FLAGS2) $(INCLUDES) $(DEFINES) -Wall -O3
 .SUFFIXES: .c .cpp
 
 all: bin/c10mbench 
