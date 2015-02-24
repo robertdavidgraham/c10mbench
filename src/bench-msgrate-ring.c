@@ -8,8 +8,10 @@
 
 uint64_t verifier1, verifier2;
 
-size_t read_wait, write_wait;
+uint64_t read_wait, write_wait;
 
+/******************************************************************************
+ ******************************************************************************/
 static void
 reader(void *parms)
 {
@@ -22,7 +24,7 @@ reader(void *parms)
         size_t p;
 
         again:
-        err = rte_ring_sc_dequeue(fd, (void**)&p);
+        err = rte_ring_dequeue(fd, (void**)&p);
         if (err) {
             read_wait++;
             pixie_usleep(100);
@@ -36,6 +38,8 @@ reader(void *parms)
     verifier1 = result;
 }
 
+/******************************************************************************
+ ******************************************************************************/
 static void
 writer(void *parms)
 {
@@ -47,7 +51,7 @@ writer(void *parms)
         int err;
 
         again:
-        err = rte_ring_sp_enqueue(fd, (void*)i);
+        err = rte_ring_enqueue(fd, (void*)i);
         if (err) {
             //printf(".");
             write_wait++;
@@ -62,40 +66,57 @@ writer(void *parms)
 }
 
 
+/******************************************************************************
+ ******************************************************************************/
 void
-bench_msgrate_ring(void)
+bench_msgrate_ring(unsigned cpu_count)
 {
-    size_t reader_thread, writer_thread;
-    uint64_t start, stop;
     struct rte_ring *ring;
-
+    unsigned i;
+    
     /*
      * Create the ring
      */
 #define BUFFER_COUNT 16384*256
-     ring = rte_ring_create(BUFFER_COUNT, RING_F_SP_ENQ|RING_F_SC_DEQ);
-     if (ring == NULL) {
-         fprintf(stderr, "****FAILURE***\n");
-         exit(1);
-     }
 
-
-    start = pixie_gettime();
-    writer_thread = pixie_begin_thread(writer, 0, ring);
-    reader_thread = pixie_begin_thread(reader, 0, ring);
-    pixie_join(reader_thread, 0);
-    pixie_join(writer_thread, 0);
-    stop = pixie_gettime();
-    
-
-    {
-        double ellapsed = (stop-start)/1000000.0;
-        double speed = BENCH_ITERATIONS2*1.0/ellapsed;
-        printf("\nbenchmark: ring msg rate\n");
-        printf("verifier: %llu = %llu\n", verifier1, verifier2);
-        printf("rate = %5.2f mega-msgs/sec\n", speed/1000000.0);
-        printf("time = %5.4f usec\n", 1000000.0/speed);
-        printf("waits = %llu %llu\n", (unsigned long long)read_wait, (unsigned long long)write_wait);
-        printf("%5.3f\n", (read_wait+write_wait)*10.0/(stop-start));
+    for (i=0; i<cpu_count; i += 2) {
+        uint64_t start, stop;
+        unsigned j;
+        double ellapsed;
+        double speed;
+        size_t thread_handles[256];
+        size_t thread_count = 0;
+        
+        if (i == 0) {
+            ring = rte_ring_create(BUFFER_COUNT, RING_F_SC_DEQ|RING_F_SP_ENQ);
+        } else {
+            ring = rte_ring_create(BUFFER_COUNT, 0);
+        }
+        if (ring == NULL) {
+            fprintf(stderr, "****FAILURE***\n");
+            exit(1);
+        }
+        
+        read_wait = 0;
+        write_wait = 0;
+        
+        start = pixie_gettime();
+        for (j=0; j<=i; j += 2) {
+            thread_handles[thread_count++] = pixie_begin_thread(reader, 0, ring);
+            thread_handles[thread_count++] = pixie_begin_thread(writer, 0, ring);
+        }
+        for (j=0; j<thread_handles[j]; j++)
+            pixie_join(thread_handles[j], 0);
+        stop = pixie_gettime();
+        
+        ellapsed = (stop-start)/1000000.0;
+        speed = (BENCH_ITERATIONS2*1.0)/ellapsed;
+        printf("ring,        %2u-cpus, %7.3f-mmsgs/s,   %6.1f-nsec, ww=%llu, rw=%llu\n",
+               (unsigned)thread_count,
+               speed/1000000.0,
+               1000000000.0/speed,
+               write_wait, read_wait);
+        
+        
     }
 }

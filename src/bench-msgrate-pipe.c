@@ -16,6 +16,8 @@
 #include <fcntl.h> 
 #endif
 
+/******************************************************************************
+ ******************************************************************************/
 static void
 reader(void *parms)
 {
@@ -32,6 +34,8 @@ reader(void *parms)
     }
 }
 
+/******************************************************************************
+ ******************************************************************************/
 static void
 writer(void *parms)
 {
@@ -49,32 +53,44 @@ writer(void *parms)
 }
 
 
+/******************************************************************************
+ ******************************************************************************/
 void
-bench_msgrate_pipe(void)
+bench_msgrate_pipe(unsigned cpu_count)
 {
     int fd[2];
     int x;
-    size_t reader_thread, writer_thread;
-    uint64_t start, stop;
-
+    unsigned i;
+    
     x = pipe(fd);
     if (x != 0) {
         perror("pipe");
         exit(1);
     }
 
-    start = pixie_gettime();
-    reader_thread = pixie_begin_thread(reader, 0, &fd[0]);
-    writer_thread = pixie_begin_thread(writer, 0, &fd[1]);
-    pixie_join(reader_thread, 0);
-    pixie_join(writer_thread, 0);
-    stop = pixie_gettime();
-
-    {
-        double ellapsed = (stop-start)/1000000.0;
-        double speed = BENCH_ITERATIONS*1.0/ellapsed;
-        printf("\nbenchmark: pipe msg rate\n");
-        printf("rate = %5.4f mega-msgs/sec\n", speed/1000000.0);
-        printf("time = %5.3f usec\n", 1000000.0/speed);
+    for (i=0; i<cpu_count; i += 2) {
+        uint64_t start, stop;
+        unsigned j;
+        double ellapsed;
+        double speed;
+        size_t thread_handles[256];
+        size_t thread_count = 0;
+        
+        start = pixie_gettime();
+        for (j=0; j<=i; j += 2) {
+            thread_handles[thread_count++] = pixie_begin_thread(reader, 0, &fd[0]);
+            thread_handles[thread_count++] = pixie_begin_thread(writer, 0, &fd[1]);
+        }
+        for (j=0; j<thread_handles[j]; j++)
+            pixie_join(thread_handles[j], 0);
+        stop = pixie_gettime();
+        
+        ellapsed = (stop-start)/1000000.0;
+        speed = (BENCH_ITERATIONS*1.0)/ellapsed;
+        printf("pipe,        %2u-cpus, %7.3f-mmsgs/s,   %6.1f-nsec\n",
+                (unsigned)thread_count,
+                speed/1000000.0,
+                1000000000.0/speed);
+        
     }
 }

@@ -8,8 +8,10 @@
 
 unsigned result = 0;
 
+/******************************************************************************
+ ******************************************************************************/
 static void
-reader(void *parms)
+worker_thread(void *parms)
 {
     size_t i;
     for (i=0; i<BENCH_ITERATIONS2; i++) {
@@ -17,37 +19,36 @@ reader(void *parms)
     }
 }
 
-static void
-writer(void *parms)
-{
-    size_t i;
-    for (i=0; i<BENCH_ITERATIONS2; i++) {
-        pixie_locked_add_u32(&result, 1);
-    }
-}
-
-
+/******************************************************************************
+ ******************************************************************************/
 void
-bench_cache_bounce(void)
+bench_cache_bounce(unsigned cpu_count)
 {
-    size_t reader_thread, writer_thread;
-    uint64_t start, stop;
+    unsigned i;
+
+    for (i=0; i<cpu_count; i += 1) {
+        unsigned j;
+        double ellapsed;
+        double speed;
+        size_t thread_handles[256];
+        size_t thread_count = 0;
+        uint64_t start, stop;
+        
+        start = pixie_gettime();
+        for (j=0; j<=i; j += 1) {
+            thread_handles[thread_count++] = pixie_begin_thread(worker_thread, 0, 0);
+        }
+        for (j=0; j<thread_handles[j]; j++)
+            pixie_join(thread_handles[j], 0);
+        stop = pixie_gettime();
 
 
-    start = pixie_gettime();
-    reader_thread = pixie_begin_thread(reader, 0, 0);
-    writer_thread = pixie_begin_thread(writer, 0, 0);
-    pixie_join(reader_thread, 0);
-    pixie_join(writer_thread, 0);
-    stop = pixie_gettime();
-
-
-    {
-        double ellapsed = (stop-start)/1000000.0;
-        double speed = BENCH_ITERATIONS2*1.0/ellapsed;
-        printf("\nbenchmark: cache bounce rate\n");
-        printf("verifier: %u = %u\n", result, 2*BENCH_ITERATIONS2);
-        printf("rate = %5.2f mega-msgs/sec\n", speed/1000000.0);
-        printf("time = %5.3f usec\n", 1000000.0/speed);
+        ellapsed = (stop-start)/1000000.0;
+        speed = BENCH_ITERATIONS2*1.0/ellapsed;
+        printf("cachebounce, %2u-cpus, %7.3f-mmsgs/s,   %6.1f-nsec\n",
+               (unsigned)thread_count,
+               speed/1000000.0,
+               1000000000.0/speed);
+        //printf("verifier: %u = %u\n", result, 2*BENCH_ITERATIONS2);
     }
 }
