@@ -1,6 +1,6 @@
-#include <windows.h>
 
 #if defined(_MSC_VER)
+#include <windows.h>
 const char *
 pixie_strerror(unsigned dwError)
 {

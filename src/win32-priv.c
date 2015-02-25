@@ -1,3 +1,4 @@
+#ifdef WIN32
 #include <Windows.h>
 #include <stdio.h>
 #include <ntsecapi.h>
@@ -178,3 +179,5 @@ public static string ExGetProcessInfoByPID
     }
 }
 #endif
+#endif
+
