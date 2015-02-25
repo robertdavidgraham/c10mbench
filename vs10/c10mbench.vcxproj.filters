@@ -54,6 +54,12 @@
     <ClCompile Include="..\src\bench-mainmem.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pixie-strerror.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\win32-priv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\c10mbench.h">
@@ -72,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\pixie-memsize.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pixie-strerror.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

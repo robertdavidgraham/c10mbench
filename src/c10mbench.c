@@ -30,7 +30,8 @@ main(int argc, char *argv[])
     
     print_version();
 
-    
+//foo();
+
     /*
      * Run all the benchmarks
      */

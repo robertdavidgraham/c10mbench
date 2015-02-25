@@ -146,14 +146,17 @@
     <ClCompile Include="..\src\c10mbench.c" />
     <ClCompile Include="..\src\main-version.c" />
     <ClCompile Include="..\src\pixie-memsize.c" />
+    <ClCompile Include="..\src\pixie-strerror.c" />
     <ClCompile Include="..\src\pixie-threads.c" />
     <ClCompile Include="..\src\pixie-timer.c" />
     <ClCompile Include="..\src\rte-ring.c" />
     <ClCompile Include="..\src\string_s.c" />
+    <ClCompile Include="..\src\win32-priv.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\c10mbench.h" />
     <ClInclude Include="..\src\pixie-memsize.h" />
+    <ClInclude Include="..\src\pixie-strerror.h" />
     <ClInclude Include="..\src\pixie-threads.h" />
     <ClInclude Include="..\src\pixie-timer.h" />
     <ClInclude Include="..\src\rte-ring.h" />
