@@ -1,7 +1,7 @@
 #include "c10mbench.h"
 #include "pixie-timer.h"
 #include "pixie-threads.h"
-#include "pixie-memsize.h"
+#include "pixie-mem.h"
 #include "rte-ring.h"
 #include "pixie-strerror.h"
 #include <stdlib.h>
@@ -14,6 +14,18 @@
 #include <WinError.h>
 #define getpid _getpid
 #define read _read 
+#elif defined(__APPLE__)
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <setjmp.h>
+#include <mach/mach.h>
+#include <mach/mach_vm.h>
+#include <time.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+
 #else
 #include <unistd.h>
 #endif
@@ -25,6 +37,7 @@ struct MainmemParms {
     unsigned char *pointer;
     unsigned result;
     unsigned id;
+    unsigned cpu_count;
 };
 
 unsigned primes[] = {
@@ -32,6 +45,20 @@ unsigned primes[] = {
     1008001,
     1114111,
     1221221,
+    1333331,
+    1411141,
+    1422241,
+    1444441,
+    1508051,
+    1551551,
+    1600061,
+    1611161,
+    1628261,
+    1633361,
+    1646461,
+    1660661,
+    1707071,
+    1777771,
     1881881,
     3007003,
     3331333,
@@ -49,9 +76,39 @@ unsigned primes[] = {
 };
 
 /******************************************************************************
+ * This thread maximizes the number of random memory accesses, maximizing
+ * the number of simultaneous accesses and predictable accesses.
  ******************************************************************************/
 static void
-worker_thread(void *v_parms)
+rate_thread(void *v_parms)
+{
+    size_t i;
+    struct MainmemParms *parms = (struct MainmemParms *)v_parms;
+    unsigned result = 0;
+    unsigned char *pointer = parms->pointer;
+    uint64_t offset = 0;
+    uint64_t memsize = parms->memsize;
+    unsigned jump = primes[parms->id];
+    
+    //pixie_cpu_set_affinity(parms->id);
+    for (i=0; i<BENCH_ITERATIONS2; i += 1) {
+        result += pointer[(size_t)offset];
+        offset += jump;
+        while (offset > memsize)
+            offset -= memsize;
+    }
+    
+    pixie_locked_add_u32(&parms->result, result);
+    free(parms);
+}
+
+
+/******************************************************************************
+ * This thread is designed for "pointer-chasing", so that out-of-order
+ * processors cannot prefetch/predict future bits of data
+ ******************************************************************************/
+static void
+chase_thread(void *v_parms)
 {
     size_t i;
     struct MainmemParms *parms = (struct MainmemParms *)v_parms;
@@ -123,43 +180,87 @@ void Privilege(TCHAR* pszPrivilege, BOOL bEnable)
 /******************************************************************************
  ******************************************************************************/
 void
-bench_mainmem(unsigned cpu_count)
+bench_mainmem(unsigned cpu_count, unsigned which_test)
 {
     size_t i;
     struct MainmemParms parms[1];
+    const char *test_name = "unknown";
+    static const uint64_t minsize = 32*1024*1024;
+    int is_huge, is_chase;
+    
+    
+    /*
+     * We support 4 types of memory tests
+     */
+    switch (which_test) {
+        case MemBench_PointerChase:
+            test_name = "memchase";
+            is_huge = 0;
+            is_chase = 1;
+            break;
+        case MemBench_PointerChaseHuge:
+            test_name = "hugechase";
+            is_huge = 1;
+            is_chase = 1;
+            break;
+        case MemBench_MaxRate:
+            test_name = "memrate";
+            is_huge = 0;
+            is_chase = 0;
+            break;
+        case MemBench_MaxRateHuge:
+            test_name = "hugerate";
+            is_huge = 1;
+            is_chase = 0;
+            break;
+        default:
+            fprintf(stderr, "%s:%u: unknown test\n", __FILE__, __LINE__);
+            return;
+    }
     
 
-    parms->memsize = pixie_get_memsize()/8;
-    parms->pointer = NULL;
-    while (parms->pointer == NULL) {
+    memset(parms, 0, sizeof(parms[0]));
+    parms->cpu_count = cpu_count;
+    
+    /* We choose 1/4 of the RAM by default */
+    parms->memsize = pixie_get_memsize()/4;
+    
+    if (is_huge) {
+        /* We are doing "huge" pages in this test, which is likely to fail
+         * unless the user has recently rebooted */
+        int err = 0;
         
-#if defined(WIN32)
-        {
-            size_t align = GetLargePageMinimum();
-
-            //Privilege(TEXT("SeLockMemoryPrivilege"), TRUE);
-
-            while (parms->memsize % align)
-                parms->memsize++;
-            parms->pointer = (unsigned char*)VirtualAlloc(0, (size_t)parms->memsize, MEM_LARGE_PAGES|MEM_COMMIT, PAGE_READWRITE);
-            if (parms->pointer == NULL && GetLastError() == ERROR_PRIVILEGE_NOT_HELD) {
-                parms->pointer = (unsigned char *)VirtualAlloc(0, (size_t)parms->memsize, MEM_COMMIT, PAGE_READWRITE);
-            }
+        parms->memsize = pixie_align_huge(parms->memsize);
+        
+        parms->pointer = pixie_alloc_huge(parms->memsize, &err);
+        
+        switch (err) {
+            case HugeErr_MemoryFragmented:
+                fprintf(stderr, "%s: test not run: memory too fragmented (reboot)\n", test_name);
+                return;
+            case HugeErr_NoPermissions:
+                fprintf(stderr, "%s: test not run: need SeLockMemoryPrivilege permission\n", test_name);
+                return;
+            default:
+                fprintf(stderr, "%s: unknown error allocating huge pages\n", test_name);
+                return;
         }
-#else
+    } else {
+        /* We aren't doing huge pages, so free the memory as normal */
         parms->pointer = (unsigned char*)malloc((size_t)parms->memsize);
-#endif
-        if (parms->pointer == NULL)
-            parms->memsize /= 2;
+        if (parms->memsize < minsize) {
+            fprintf(stderr, "%s: test not run: buffer too small\n", test_name);
+            return;
+        }
     }
+    
+    /* Zero out the memory. This also has the effect of committing all the 
+     * pages if they weren't already, as well as rev up the CPU to full
+     * speed if it's in some sort of sleep state */
     memset(parms->pointer, 0, (size_t)parms->memsize);
-    parms->result = 0;
 
     fprintf(stderr, "memsize = %llu\n", (uint64_t)parms->memsize);
     
-    /*for (i=0; i<parms->memsize; i++) {
-        parms->pointer[i] = (unsigned char)i;
-    }*/
     
     for (i=0; i<cpu_count; i++) {
         unsigned j;
@@ -170,12 +271,24 @@ bench_mainmem(unsigned cpu_count)
         uint64_t start, stop;
         
         start = pixie_gettime();
+        
+        /* start the threads */
         for (j=0; j<=i; j++) {
+            void (*worker)(void*);
             struct MainmemParms *parms2 = (struct MainmemParms*)malloc(sizeof(*parms2));
             parms->id = j;
             memcpy(parms2, parms, sizeof(parms2[0]));
-            thread_handles[thread_count++] = pixie_begin_thread(worker_thread, 0, parms2);
+            
+            if (is_chase)
+                worker = chase_thread;
+            else 
+                worker = rate_thread;
+
+            /* launch the worker thread to performa the benchmark */
+            thread_handles[thread_count++] = pixie_begin_thread(worker, 0, parms2);
         }
+        
+        /* wait for all threads to complete their work */
         for (j=0; j<thread_count; j++)
             pixie_join(thread_handles[j], 0);
         stop = pixie_gettime();
@@ -184,9 +297,17 @@ bench_mainmem(unsigned cpu_count)
         ellapsed = (stop-start)/1000000.0;
         speed = BENCH_ITERATIONS2*1.0/ellapsed;
         
-        printf("mainmem,     %2u,  %7.3f,  %7.1f\n",
+        printf("%-12s, %2u,  %7.3f,  %7.3f,  %7.1f\n",
+               test_name,
                (unsigned)thread_count,
                speed/1000000.0,
+               1.0*thread_count*speed/1000000.0,               
                1000000000.0/speed);
+        
+        if (is_huge)
+            pixie_free_huge(parms->pointer, parms->memsize);
+        else {
+            free(parms->pointer);
+        }
     }
 }

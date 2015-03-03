@@ -57,7 +57,6 @@ bench_syscall(unsigned cpu_count)
         }
         for (j=0; j<thread_count; j++) {
             pixie_join(thread_handles[j], 0);
-            printf("", j);
         }
         stop = pixie_gettime();
         

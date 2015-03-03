@@ -19,7 +19,8 @@
 		1143D0D31A9B102300CAC03D /* string_s.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0C81A9B102300CAC03D /* string_s.c */; };
 		1143D0D51A9B111E00CAC03D /* main-version.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0D41A9B111E00CAC03D /* main-version.c */; };
 		1143D0D71A9BEC4300CAC03D /* bench-mainmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0D61A9BEC4300CAC03D /* bench-mainmem.c */; };
-		1143D0D91A9C3B2C00CAC03D /* pixie-memsize.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0D81A9C3B2C00CAC03D /* pixie-memsize.c */; };
+		1143D0D91A9C3B2C00CAC03D /* pixie-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 1143D0D81A9C3B2C00CAC03D /* pixie-mem.c */; };
+		11FB60371AA4B04000427CA3 /* bench-cachespeed.c in Sources */ = {isa = PBXBuildFile; fileRef = 11FB60361AA4B04000427CA3 /* bench-cachespeed.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,8 +54,9 @@
 		1143D0C91A9B102300CAC03D /* string_s.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = string_s.h; path = ../../src/string_s.h; sourceTree = "<group>"; };
 		1143D0D41A9B111E00CAC03D /* main-version.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "main-version.c"; path = "../../src/main-version.c"; sourceTree = "<group>"; };
 		1143D0D61A9BEC4300CAC03D /* bench-mainmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "bench-mainmem.c"; path = "../../src/bench-mainmem.c"; sourceTree = "<group>"; };
-		1143D0D81A9C3B2C00CAC03D /* pixie-memsize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "pixie-memsize.c"; path = "../../src/pixie-memsize.c"; sourceTree = "<group>"; };
-		1143D0DA1A9C3B6500CAC03D /* pixie-memsize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "pixie-memsize.h"; path = "../../src/pixie-memsize.h"; sourceTree = "<group>"; };
+		1143D0D81A9C3B2C00CAC03D /* pixie-mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "pixie-mem.c"; path = "../../src/pixie-mem.c"; sourceTree = "<group>"; };
+		1143D0DA1A9C3B6500CAC03D /* pixie-mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "pixie-mem.h"; path = "../../src/pixie-mem.h"; sourceTree = "<group>"; };
+		11FB60361AA4B04000427CA3 /* bench-cachespeed.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "bench-cachespeed.c"; path = "../../src/bench-cachespeed.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +106,9 @@
 				1143D0C71A9B102300CAC03D /* rte-ring.h */,
 				1143D0C81A9B102300CAC03D /* string_s.c */,
 				1143D0C91A9B102300CAC03D /* string_s.h */,
-				1143D0D81A9C3B2C00CAC03D /* pixie-memsize.c */,
-				1143D0DA1A9C3B6500CAC03D /* pixie-memsize.h */,
+				1143D0D81A9C3B2C00CAC03D /* pixie-mem.c */,
+				1143D0DA1A9C3B6500CAC03D /* pixie-mem.h */,
+				11FB60361AA4B04000427CA3 /* bench-cachespeed.c */,
 			);
 			path = c10mbench;
 			sourceTree = "<group>";
@@ -172,7 +175,8 @@
 				1143D0D31A9B102300CAC03D /* string_s.c in Sources */,
 				1143D0D51A9B111E00CAC03D /* main-version.c in Sources */,
 				1143D0D71A9BEC4300CAC03D /* bench-mainmem.c in Sources */,
-				1143D0D91A9C3B2C00CAC03D /* pixie-memsize.c in Sources */,
+				1143D0D91A9C3B2C00CAC03D /* pixie-mem.c in Sources */,
+				11FB60371AA4B04000427CA3 /* bench-cachespeed.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

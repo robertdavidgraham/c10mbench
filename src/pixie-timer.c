@@ -231,7 +231,7 @@ pixie_mssleep(unsigned milliseconds)
 {
     pixie_usleep(milliseconds * 1000ULL);
 }
-uint64_t
+volatile uint64_t
 pixie_gettime(void)
 {
     return mach_absolute_time()/1000;

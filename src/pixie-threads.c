@@ -10,6 +10,9 @@
 #include <pthread.h>
 #include <sched.h>
 #include <errno.h>
+#include <string.h>
+#include <errno.h>
+#include <stdlib.h>
 #endif
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__)
@@ -215,3 +218,35 @@ pixie_join(size_t thread_handle, size_t *exit_code)
 #error pixie_join undefined
 #endif
 }
+
+void *pixie_mutex_create(void)
+{
+    int err;
+    pthread_mutex_t *mutex = (pthread_mutex_t*)malloc(sizeof(*mutex));
+    if (mutex == NULL)
+        return NULL;
+    err = pthread_mutex_init(mutex, 0);
+    if (err != 0) {
+        fprintf(stderr, "mutex: %s\n", strerror(err));
+        free(mutex);
+        return NULL;
+    }
+    return mutex;
+}
+
+void pixie_mutex_destroy(void *mutex)
+{
+    if (mutex) {
+        pthread_mutex_destroy(mutex);
+        free(mutex);
+    }
+}
+void pixie_mutex_lock(void *mutex)
+{
+    pthread_mutex_lock(mutex);
+}
+void pixie_mutex_unlock(void *mutex)
+{
+    pthread_mutex_unlock(mutex);
+}
+

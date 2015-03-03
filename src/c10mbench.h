@@ -12,7 +12,7 @@ void
 bench_msgrate_pipe(unsigned cpu_count);
 
 void
-bench_cache_bounce(unsigned cpu_count);
+bench_cache_bounce(unsigned cpu_count, unsigned which_test);
 
 void
 bench_syscall(unsigned cpu_count);
@@ -20,8 +20,19 @@ bench_syscall(unsigned cpu_count);
 void
 bench_funcall(unsigned cpu_count, void (*add_two_numbers)(volatile unsigned *a, unsigned b));
 
+enum {
+    MemBench_PointerChase,
+    MemBench_PointerChaseHuge,
+    MemBench_MaxRate,
+    MemBench_MaxRateHuge,
+    
+    CacheBench_Add,
+    CacheBench_LockedAdd,
+    CacheBench_MutexAdd,
+};
+
 void
-bench_mainmem(unsigned cpu_count);
+bench_mainmem(unsigned cpu_count, unsigned which_test);
 
 #endif
 

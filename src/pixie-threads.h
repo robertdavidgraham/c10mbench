@@ -29,6 +29,14 @@ void pixie_cpu_raise_priority(void);
 void pixie_locked_subtract_u32(unsigned *lhs, unsigned rhs);
 
 
+void *pixie_mutex_create(void);
+void pixie_mutex_destroy(void *mutex);
+void pixie_mutex_lock(void *mutex);
+void pixie_mutex_unlock(void *mutex);
+
+
+
+
 
 #if defined(_MSC_VER)
 #define pixie_locked_add_u32(dst, src) _InterlockedExchangeAdd((volatile long*)(dst), (src))

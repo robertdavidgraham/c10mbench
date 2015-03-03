@@ -27,18 +27,23 @@ main(int argc, char *argv[])
     /* Grab the number of CPUs. We want to run benchmarks on as many CPUs as
      * possible in order to test scaling */
     cpu_count = pixie_cpu_get_count();
-    
+
+    /* Print OS, version, CPU, etc. */
     print_version();
 
-//foo();
-
     /*
-     * Run all the benchmarks
+     * Print header information
      */
-    printf("          ,CPUs,   Mm/sec,    nsecs\n");
+    printf("           ,CPUs,   Mm/sec,    Total,    nsecs\n");
 
-    bench_mainmem(cpu_count);
-    bench_cache_bounce(cpu_count);
+
+    bench_cache_bounce(cpu_count, CacheBench_Add);
+    bench_cache_bounce(cpu_count, CacheBench_LockedAdd);
+    bench_cache_bounce(cpu_count, CacheBench_MutexAdd);
+    bench_mainmem(cpu_count, MemBench_MaxRateHuge);
+    bench_mainmem(cpu_count, MemBench_PointerChaseHuge);
+    bench_mainmem(cpu_count, MemBench_MaxRate);
+    bench_mainmem(cpu_count, MemBench_PointerChase);
     bench_syscall(cpu_count);
     bench_funcall(cpu_count, add_two_numbers);
     bench_msgrate_pipe(cpu_count);

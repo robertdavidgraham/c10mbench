@@ -5,7 +5,7 @@
 /**
  * The current time, in microseconds
  */
-uint64_t pixie_gettime(void);
+volatile uint64_t pixie_gettime(void);
 
 /**
  * The current time, in nanoseconds
