@@ -2,6 +2,7 @@
 
 #if defined(WIN32)
 #include <Windows.h>
+#include <WinError.h>
 #elif defined (__APPLE__) || defined (__MACH__)
 #include <unistd.h>
 #include <sys/types.h>
@@ -36,15 +37,70 @@ pixie_align_huge(size_t size)
     size_t align;
     
 #if defined(WIN32)
+
     align = GetLargePageMinimum();
+
 #else
+
+    /* Assume x86/ARM sizes if there is no easy API to retrieve that
+     * information for us */
     if (sizeof(void*) == 8)
         align = 2 * 1024 * 1024;
     else
         align = 4 * 1024 * 1024;
+
 #endif
-    size = (size + (align-1)) & (~align);
+
+    size = (size + (align-1)) & (~(align-1));
+    return size;
 }
+
+//https://wiki.linaro.org/LEG/Engineering/Kernel/HugePages
+
+#if defined(WIN32)
+
+void win_perror(const char *str)
+{
+    DWORD dwError = GetLastError();
+    LPVOID lpvMessageBuffer;
+
+    FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                  FORMAT_MESSAGE_FROM_SYSTEM |
+                  FORMAT_MESSAGE_IGNORE_INSERTS,
+                  NULL, dwError,
+                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                  (LPSTR)&lpvMessageBuffer, 0, NULL);
+
+    //... now display this string
+    fprintf(stderr, "%s: %s\n", str, lpvMessageBuffer);
+
+    
+    // Free the buffer allocated by the system
+    LocalFree(lpvMessageBuffer);
+
+}
+
+//http://blogs.msdn.com/b/oldnewthing/archive/2011/01/28/10121300.aspx
+void Privilege(TCHAR* pszPrivilege, BOOL bEnable)
+{
+  HANDLE      hToken;
+  TOKEN_PRIVILEGES tp;
+  BOOL       status;
+  DWORD      error;
+
+  OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken);
+  LookupPrivilegeValue(NULL, pszPrivilege, &tp.Privileges[0].Luid);
+  tp.PrivilegeCount = 1;
+  tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+  status = AdjustTokenPrivileges(hToken, FALSE, &tp, 0, (PTOKEN_PRIVILEGES)NULL, 0);
+  if (!status) {
+      win_perror("SeLockMemoryPrivilege");
+  }
+  error = GetLastError();
+  CloseHandle(hToken);
+}
+
+#endif
 
 /******************************************************************************
  * Allocates huge pages
@@ -58,8 +114,9 @@ pixie_alloc_huge(size_t size, int *err)
     
     /* On Windows, the user account needs privileges to use huge pages, which
      * it doesn't by default */
-    //Privilege(TEXT("SeLockMemoryPrivilege"), TRUE);
+    Privilege(TEXT("SeLockMemoryPrivilege"), TRUE);
     
+
     /* Attempt the allocation */
     result = VirtualAlloc(
                           0, /* have the OS assign an address */
@@ -74,13 +131,19 @@ pixie_alloc_huge(size_t size, int *err)
     }
     
     /* Handle fragmented error */
-    if (presult == NULL && GetLastError() == 3) {
+    if (result == NULL && GetLastError() == 3) {
+        *err = HugeErr_MemoryFragmented;
+        return result;
+    }
+    if (result == NULL && GetLastError() == ERROR_NO_SYSTEM_RESOURCES) {
         *err = HugeErr_MemoryFragmented;
         return result;
     }
     
     /* Handle any other error */
-    if (result == NULL && GetLastError() == 3) {
+    if (result == NULL) {
+        fprintf(stderr, "err = %u\n", GetLastError());
+        win_perror("VirtualAlloc(MEM_LARGE_PAGES)");
         *err = HugeErr_Unknown;
         return result;
     }

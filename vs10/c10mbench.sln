@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "c10mbench", "c10mbench.vcxproj", "{EFA53D36-5C97-4980-B2BC-3D5E79614F45}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "c10mbench", "c10mbench.vcxproj", "{42037E65-2D7A-431B-B7FD-E67202C74043}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +11,14 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EFA53D36-5C97-4980-B2BC-3D5E79614F45}.Debug|Win32.ActiveCfg = Debug|Win32
-		{EFA53D36-5C97-4980-B2BC-3D5E79614F45}.Debug|Win32.Build.0 = Debug|Win32
-		{EFA53D36-5C97-4980-B2BC-3D5E79614F45}.Debug|x64.ActiveCfg = Debug|x64
-		{EFA53D36-5C97-4980-B2BC-3D5E79614F45}.Debug|x64.Build.0 = Debug|x64
-		{EFA53D36-5C97-4980-B2BC-3D5E79614F45}.Release|Win32.ActiveCfg = Release|Win32
-		{EFA53D36-5C97-4980-B2BC-3D5E79614F45}.Release|Win32.Build.0 = Release|Win32
-		{EFA53D36-5C97-4980-B2BC-3D5E79614F45}.Release|x64.ActiveCfg = Release|x64
-		{EFA53D36-5C97-4980-B2BC-3D5E79614F45}.Release|x64.Build.0 = Release|x64
+		{42037E65-2D7A-431B-B7FD-E67202C74043}.Debug|Win32.ActiveCfg = Debug|Win32
+		{42037E65-2D7A-431B-B7FD-E67202C74043}.Debug|Win32.Build.0 = Debug|Win32
+		{42037E65-2D7A-431B-B7FD-E67202C74043}.Debug|x64.ActiveCfg = Debug|x64
+		{42037E65-2D7A-431B-B7FD-E67202C74043}.Debug|x64.Build.0 = Debug|x64
+		{42037E65-2D7A-431B-B7FD-E67202C74043}.Release|Win32.ActiveCfg = Release|Win32
+		{42037E65-2D7A-431B-B7FD-E67202C74043}.Release|Win32.Build.0 = Release|Win32
+		{42037E65-2D7A-431B-B7FD-E67202C74043}.Release|x64.ActiveCfg = Release|x64
+		{42037E65-2D7A-431B-B7FD-E67202C74043}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -219,8 +219,16 @@ pixie_join(size_t thread_handle, size_t *exit_code)
 #endif
 }
 
-void *pixie_mutex_create(void)
+void *
+pixie_mutex_create(void)
 {
+#if defined(WIN32)
+    CRITICAL_SECTION *mutex = (CRITICAL_SECTION*)malloc(sizeof(*mutex));
+    if (mutex == NULL)
+        return NULL;
+    InitializeCriticalSection(mutex);
+    return mutex;
+#else
     int err;
     pthread_mutex_t *mutex = (pthread_mutex_t*)malloc(sizeof(*mutex));
     if (mutex == NULL)
@@ -232,21 +240,37 @@ void *pixie_mutex_create(void)
         return NULL;
     }
     return mutex;
+#endif
 }
 
 void pixie_mutex_destroy(void *mutex)
 {
+#if defined(WIN32)
+    if (mutex) {
+        DeleteCriticalSection((CRITICAL_SECTION*)mutex);
+        free(mutex);
+    }
+#else
     if (mutex) {
         pthread_mutex_destroy(mutex);
         free(mutex);
     }
+#endif
 }
 void pixie_mutex_lock(void *mutex)
 {
+#if defined(WIN32)
+    EnterCriticalSection((CRITICAL_SECTION*)mutex);
+#else
     pthread_mutex_lock(mutex);
+#endif
 }
 void pixie_mutex_unlock(void *mutex)
 {
+#if defined(WIN32)
+    LeaveCriticalSection((CRITICAL_SECTION*)mutex);
+#else
     pthread_mutex_unlock(mutex);
+#endif
 }
 

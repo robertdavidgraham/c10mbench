@@ -18,8 +18,34 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\bench-cachebounce.c" />
+    <ClCompile Include="..\src\bench-funcall.c" />
+    <ClCompile Include="..\src\bench-mainmem.c" />
+    <ClCompile Include="..\src\bench-msgrate-pipe.c" />
+    <ClCompile Include="..\src\bench-msgrate-ring.c" />
+    <ClCompile Include="..\src\bench-syscall.c" />
+    <ClCompile Include="..\src\c10mbench.c" />
+    <ClCompile Include="..\src\main-version.c" />
+    <ClCompile Include="..\src\pixie-mem.c" />
+    <ClCompile Include="..\src\pixie-strerror.c" />
+    <ClCompile Include="..\src\pixie-threads.c" />
+    <ClCompile Include="..\src\pixie-timer.c" />
+    <ClCompile Include="..\src\rte-ring.c" />
+    <ClCompile Include="..\src\string_s.c" />
+    <ClCompile Include="..\src\win32-priv.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\c10mbench.h" />
+    <ClInclude Include="..\src\pixie-mem.h" />
+    <ClInclude Include="..\src\pixie-strerror.h" />
+    <ClInclude Include="..\src\pixie-threads.h" />
+    <ClInclude Include="..\src\pixie-timer.h" />
+    <ClInclude Include="..\src\rte-ring.h" />
+    <ClInclude Include="..\src\string_s.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{EFA53D36-5C97-4980-B2BC-3D5E79614F45}</ProjectGuid>
+    <ProjectGuid>{42037E65-2D7A-431B-B7FD-E67202C74043}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>c10mbench</RootNamespace>
   </PropertyGroup>
@@ -67,14 +93,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)/../bin/x64-win</OutDir>
+    <OutDir>$(SolutionDir)\..\bin\</OutDir>
+    <IntDir>$(SolutionDir)\..\tmp\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)/../bin/x64-win</OutDir>
+    <OutDir>$(SolutionDir)\..\bin\</OutDir>
+    <IntDir>$(SolutionDir)\..\tmp\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -136,35 +164,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\bench-cachebounce.c" />
-    <ClCompile Include="..\src\bench-funcall.c" />
-    <ClCompile Include="..\src\bench-mainmem.c" />
-    <ClCompile Include="..\src\bench-msgrate-pipe.c" />
-    <ClCompile Include="..\src\bench-msgrate-ring.c" />
-    <ClCompile Include="..\src\bench-syscall.c" />
-    <ClCompile Include="..\src\c10mbench.c" />
-    <ClCompile Include="..\src\main-version.c" />
-    <ClCompile Include="..\src\pixie-memsize.c" />
-    <ClCompile Include="..\src\pixie-strerror.c" />
-    <ClCompile Include="..\src\pixie-threads.c" />
-    <ClCompile Include="..\src\pixie-timer.c" />
-    <ClCompile Include="..\src\rte-ring.c" />
-    <ClCompile Include="..\src\string_s.c" />
-    <ClCompile Include="..\src\win32-priv.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\c10mbench.h" />
-    <ClInclude Include="..\src\pixie-memsize.h" />
-    <ClInclude Include="..\src\pixie-strerror.h" />
-    <ClInclude Include="..\src\pixie-threads.h" />
-    <ClInclude Include="..\src\pixie-timer.h" />
-    <ClInclude Include="..\src\rte-ring.h" />
-    <ClInclude Include="..\src\string_s.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\README.md" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

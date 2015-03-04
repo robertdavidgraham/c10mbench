@@ -130,52 +130,6 @@ chase_thread(void *v_parms)
     free(parms);
 }
 
-//https://wiki.linaro.org/LEG/Engineering/Kernel/HugePages
-
-#if defined(WIN32)
-
-void win_perror(const char *str)
-{
-    DWORD dwError = GetLastError();
-    LPVOID lpvMessageBuffer;
-
-    FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                  FORMAT_MESSAGE_FROM_SYSTEM |
-                  FORMAT_MESSAGE_IGNORE_INSERTS,
-                  NULL, dwError,
-                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                  (LPSTR)&lpvMessageBuffer, 0, NULL);
-
-    //... now display this string
-    fprintf(stderr, "%s: %s\n", str, lpvMessageBuffer);
-
-    
-    // Free the buffer allocated by the system
-    LocalFree(lpvMessageBuffer);
-
-}
-
-//http://blogs.msdn.com/b/oldnewthing/archive/2011/01/28/10121300.aspx
-void Privilege(TCHAR* pszPrivilege, BOOL bEnable)
-{
-  HANDLE      hToken;
-  TOKEN_PRIVILEGES tp;
-  BOOL       status;
-  DWORD      error;
-
-  OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken);
-  LookupPrivilegeValue(NULL, pszPrivilege, &tp.Privileges[0].Luid);
-  tp.PrivilegeCount = 1;
-  tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-  status = AdjustTokenPrivileges(hToken, FALSE, &tp, 0, (PTOKEN_PRIVILEGES)NULL, 0);
-  if (status) {
-      win_perror("SeLockMemoryPrivilege");
-  }
-  error = GetLastError();
-  CloseHandle(hToken);
-}
-
-#endif
 
 /******************************************************************************
  ******************************************************************************/
@@ -223,7 +177,7 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
     parms->cpu_count = cpu_count;
     
     /* We choose 1/4 of the RAM by default */
-    parms->memsize = pixie_get_memsize()/4;
+    parms->memsize = pixie_get_memsize()/2;
     
     if (is_huge) {
         /* We are doing "huge" pages in this test, which is likely to fail
@@ -235,6 +189,8 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
         parms->pointer = pixie_alloc_huge(parms->memsize, &err);
         
         switch (err) {
+            case HugeErr_Success:
+                break;
             case HugeErr_MemoryFragmented:
                 fprintf(stderr, "%s: test not run: memory too fragmented (reboot)\n", test_name);
                 return;
@@ -304,10 +260,14 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
                1.0*thread_count*speed/1000000.0,               
                1000000000.0/speed);
         
-        if (is_huge)
-            pixie_free_huge(parms->pointer, parms->memsize);
-        else {
-            free(parms->pointer);
-        }
+    }
+
+    /* 
+     * Free the huge buffer we allocated 
+     */
+    if (is_huge)
+        pixie_free_huge(parms->pointer, parms->memsize);
+    else {
+        free(parms->pointer);
     }
 }

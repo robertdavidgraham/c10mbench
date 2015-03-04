@@ -1,7 +1,27 @@
 #include "c10mbench.h"
 #include "pixie-threads.h"
 #include <stdio.h>
+#include <Windows.h>
 
+void alloc_all(void)
+{
+    char **p;
+    unsigned i;
+    unsigned count = 6*1024*1024;
+    unsigned j;
+
+    p = (char**)malloc(sizeof(*p) * count);
+    for (i=0; i<count; i++) {
+        p[i] = (char*)VirtualAlloc(0, 4096, MEM_COMMIT|MEM_RESERVE, PAGE_READWRITE);
+        if (p[i] == NULL)
+            break;
+        p[i][0] = 0xa3;
+    }
+
+    for (j=0; j<i; j++) {
+        VirtualFree(p[i], 4096, MEM_RELEASE);
+    }
+}
 
 
 /******************************************************************************
@@ -36,14 +56,15 @@ main(int argc, char *argv[])
      */
     printf("           ,CPUs,   Mm/sec,    Total,    nsecs\n");
 
+    //alloc_all();
 
-    bench_cache_bounce(cpu_count, CacheBench_Add);
-    bench_cache_bounce(cpu_count, CacheBench_LockedAdd);
-    bench_cache_bounce(cpu_count, CacheBench_MutexAdd);
     bench_mainmem(cpu_count, MemBench_MaxRateHuge);
     bench_mainmem(cpu_count, MemBench_PointerChaseHuge);
     bench_mainmem(cpu_count, MemBench_MaxRate);
     bench_mainmem(cpu_count, MemBench_PointerChase);
+    bench_cache_bounce(cpu_count, CacheBench_Add);
+    bench_cache_bounce(cpu_count, CacheBench_LockedAdd);
+    bench_cache_bounce(cpu_count, CacheBench_MutexAdd);
     bench_syscall(cpu_count);
     bench_funcall(cpu_count, add_two_numbers);
     bench_msgrate_pipe(cpu_count);
