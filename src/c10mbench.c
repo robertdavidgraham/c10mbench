@@ -1,6 +1,8 @@
 #include "c10mbench.h"
 #include "pixie-threads.h"
 #include <stdio.h>
+
+/*
 #include <Windows.h>
 
 void alloc_all(void)
@@ -22,6 +24,7 @@ void alloc_all(void)
         VirtualFree(p[i], 4096, MEM_RELEASE);
     }
 }
+ */
 
 
 /******************************************************************************

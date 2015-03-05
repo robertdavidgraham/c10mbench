@@ -177,7 +177,7 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
     parms->cpu_count = cpu_count;
     
     /* We choose 1/4 of the RAM by default */
-    parms->memsize = pixie_get_memsize()/2;
+    parms->memsize = pixie_get_memsize()/4;
     
     if (is_huge) {
         /* We are doing "huge" pages in this test, which is likely to fail
