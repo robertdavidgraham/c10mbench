@@ -12,20 +12,13 @@
 #include <mach/mach_vm.h>
 #include <sys/mman.h>
 #include <errno.h>
-#elif defined (BSD)
+#else
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/sysctl.h>
 #include <sys/mman.h>
-#elif defined (__unix__) || defined (__unix) || defined (unix)
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/param.h>
-#include <sys/sysctl.h>
-#include <sys/mman.h>
-#elif
-#error pixie-mem.c: unsupported OS
+#include <errno.h>
 #endif
 
 
@@ -185,6 +178,15 @@ pixie_alloc_huge(size_t size, int *err)
                   -1,   /* no file descriptor */
                   0     /* no offset */
                   );
+    if (result == (void*)-1 && errno == ENOMEM) {
+        *err = HugeErr_MemoryFragmented;
+	return 0;
+    }
+    if (result == (void*)-1) {
+	printf("err = %u\n", errno);
+	perror("mmap");
+	}
+    return result;
 #endif
 }
 

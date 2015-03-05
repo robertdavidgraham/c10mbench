@@ -187,7 +187,7 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
         parms->memsize = pixie_align_huge(parms->memsize);
         
         parms->pointer = pixie_alloc_huge(parms->memsize, &err);
-        
+
         switch (err) {
             case HugeErr_Success:
                 break;
@@ -209,13 +209,13 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
             return;
         }
     }
-    
+
     /* Zero out the memory. This also has the effect of committing all the 
      * pages if they weren't already, as well as rev up the CPU to full
      * speed if it's in some sort of sleep state */
+    fprintf(stderr, "memsizae = %llu\n", (uint64_t)parms->memsize);
     memset(parms->pointer, 0, (size_t)parms->memsize);
 
-    fprintf(stderr, "memsize = %llu\n", (uint64_t)parms->memsize);
     
     
     for (i=0; i<cpu_count; i++) {
@@ -271,3 +271,4 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
         free(parms->pointer);
     }
 }
+
