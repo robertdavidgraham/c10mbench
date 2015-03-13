@@ -34,8 +34,8 @@
 
 struct MainmemParms {
     uint64_t memsize;
-    unsigned char *pointer;
-    unsigned result;
+    size_t *pointer;
+    uint64_t result;
     unsigned id;
     unsigned cpu_count;
 };
@@ -61,6 +61,7 @@ unsigned primes[] = {
     1777771,
     1881881,
     3007003,
+    3233323,
     3331333,
     7118117,
     7722277,
@@ -75,6 +76,55 @@ unsigned primes[] = {
     9700079,
 };
 
+volatile uint64_t global_result = 0;
+
+/******************************************************************************
+ * This is a typical LCG random function like 'rand()'. I define my own only
+ * so that results will be consistent across all platforms, that I have a
+ * 64-bit version, and so that that state is explicit instead of implicit.
+ ******************************************************************************/
+static size_t 
+myrand(unsigned long long *state)
+{
+    *state = *state * 6364136223846793005UL + 1442695040888963407UL;
+    return (size_t)((*state)>>16);
+}
+
+/******************************************************************************
+ * This takes a pointer-chasing array and randomizes the order in which the
+ * pointers will be chased.
+ ******************************************************************************/
+static void
+pointer_chase_randomize(size_t array[], size_t size)
+{
+    size_t i;
+    unsigned long long seed = 0;
+    
+    for (i=1; i<size; i++)
+        array[i-1] = i;
+    array[size-1] = 0;
+    
+    /*
+    a->b->c->d->e->f->g->h->i->j->k->l
+    
+    a->b->c->i->d->e->f->g->h->j->k->l
+    */
+    
+    for (i=0; i<size*2; i++) {
+        size_t a = myrand(&seed) % size;
+        size_t b = myrand(&seed) % size;
+        size_t swap;
+        
+        swap = array[b];
+        array[b] = array[array[b]];
+        
+        array[swap] = array[a];
+        array[a] = swap;
+    }
+}
+
+
+
 /******************************************************************************
  * This thread maximizes the number of random memory accesses, maximizing
  * the number of simultaneous accesses and predictable accesses.
@@ -84,21 +134,20 @@ rate_thread(void *v_parms)
 {
     size_t i;
     struct MainmemParms *parms = (struct MainmemParms *)v_parms;
-    unsigned result = 0;
-    unsigned char *pointer = parms->pointer;
+    uint64_t result = 0;
+    size_t *array = (size_t*)parms->pointer;
     uint64_t offset = 0;
-    uint64_t memsize = parms->memsize;
+    uint64_t count = parms->memsize/sizeof(size_t);
     unsigned jump = primes[parms->id];
     
-    //pixie_cpu_set_affinity(parms->id);
     for (i=0; i<BENCH_ITERATIONS2; i += 1) {
-        result += pointer[(size_t)offset];
+        result += array[(size_t)offset];
         offset += jump;
-        while (offset > memsize)
-            offset -= memsize;
+        while (offset > count)
+            offset -= count;
     }
     
-    pixie_locked_add_u32(&parms->result, result);
+    pixie_locked_add_u64(&global_result, result);
     free(parms);
 }
 
@@ -112,21 +161,21 @@ chase_thread(void *v_parms)
 {
     size_t i;
     struct MainmemParms *parms = (struct MainmemParms *)v_parms;
-    unsigned result = 0;
-    unsigned char *pointer = parms->pointer;
+    uint64_t result = 0;
+    size_t *array = (size_t*)parms->pointer;
     uint64_t offset = 0;
-    uint64_t memsize = parms->memsize;
+    uint64_t count = parms->memsize/sizeof(size_t);
     unsigned jump = primes[parms->id];
 
     //pixie_cpu_set_affinity(parms->id);
     for (i=0; i<BENCH_ITERATIONS2; i++) {
-        result += pointer[(size_t)offset];
-        offset += jump + pointer[(size_t)offset];
-        while (offset > memsize)
-            offset -= memsize;
+        result += array[(size_t)offset];
+        offset += jump + array[(size_t)offset];
+        while (offset > count)
+            offset -= count;
     }
     
-    pixie_locked_add_u32(&parms->result, result);
+    pixie_locked_add_u64(&global_result, result);
     free(parms);
 }
 
@@ -144,7 +193,9 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
     
     
     /*
-     * We support 4 types of memory tests
+     * We support 4 types of memory tests, a combination of 
+     * "pointer-chasing" vs. "rate", and "small-pages" vs.
+     * "huge-pages".
      */
     switch (which_test) {
         case MemBench_PointerChase:
@@ -203,7 +254,7 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
         }
     } else {
         /* We aren't doing huge pages, so free the memory as normal */
-        parms->pointer = (unsigned char*)malloc((size_t)parms->memsize);
+        parms->pointer = (size_t*)malloc((size_t)parms->memsize);
         if (parms->memsize < minsize) {
             fprintf(stderr, "%s: test not run: buffer too small\n", test_name);
             return;
@@ -213,9 +264,21 @@ bench_mainmem(unsigned cpu_count, unsigned which_test)
     /* Zero out the memory. This also has the effect of committing all the 
      * pages if they weren't already, as well as rev up the CPU to full
      * speed if it's in some sort of sleep state */
-    fprintf(stderr, "memsizae = %llu\n", (uint64_t)parms->memsize);
+    fprintf(stderr, "memsize = %llu\n", (uint64_t)parms->memsize);
     memset(parms->pointer, 0, (size_t)parms->memsize);
 
+    /* Initialize the memory according to the test we are performing */
+    {
+        size_t *array = (size_t*)parms->pointer;
+        size_t count = parms->memsize / sizeof(size_t);
+        if (is_chase) {
+            pointer_chase_randomize(array, count);
+        } else {
+            uint64_t seed = 0;
+            for (i=0; i<count; i++)
+                array[i] = primes[myrand(&seed)&0x1f];
+        }
+    }
     
     
     for (i=0; i<cpu_count; i++) {

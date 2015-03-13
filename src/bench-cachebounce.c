@@ -31,6 +31,7 @@ static void
 worker_locked_add(void *parms)
 {
     size_t i;
+    
     for (i=0; i<BENCH_ITERATIONS2; i++) {
         pixie_locked_add_u32(&result, 1);
     }
@@ -42,6 +43,7 @@ static void
 worker_add(void *parms)
 {
     size_t i;
+
     for (i=0; i<BENCH_ITERATIONS2; i++) {
         result++;
     }
@@ -82,7 +84,12 @@ bench_cache_bounce(unsigned cpu_count, unsigned which_test)
                 func = worker_mutex;
                 test_name = "addmutex";
                 break;
-
+            default:
+                func = 0;
+                test_name = "unknown";
+                fprintf(stderr, "cachebounce: unknown test\n");
+                exit(1);
+                break;
         }
         
         start = pixie_gettime();

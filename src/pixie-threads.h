@@ -40,6 +40,7 @@ void pixie_mutex_unlock(void *mutex);
 
 #if defined(_MSC_VER)
 #define pixie_locked_add_u32(dst, src) _InterlockedExchangeAdd((volatile long*)(dst), (src))
+#define pixie_locked_add_u64(dst, src) _InterlockedExchangeAdd64((volatile long long*)(dst), (src))
 #define pixie_locked_CAS32(dst, src, expected) (_InterlockedCompareExchange((volatile long*)dst, src, expected) == (expected))
 #define pixie_locked_CAS64(dst, src, expected) (_InterlockedCompareExchange64((volatile long long*)dst, src, expected) == (expected))
 #define rte_atomic32_cmpset(dst, exp, src) (_InterlockedCompareExchange((volatile long *)dst, (long)src, (long)exp)==(long)(exp))

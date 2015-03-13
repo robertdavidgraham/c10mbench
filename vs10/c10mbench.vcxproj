@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\bench-cachebounce.c" />
+    <ClCompile Include="..\src\bench-cachespeed.c" />
     <ClCompile Include="..\src\bench-funcall.c" />
     <ClCompile Include="..\src\bench-mainmem.c" />
     <ClCompile Include="..\src\bench-msgrate-pipe.c" />
@@ -43,6 +44,9 @@
     <ClInclude Include="..\src\pixie-timer.h" />
     <ClInclude Include="..\src\rte-ring.h" />
     <ClInclude Include="..\src\string_s.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{42037E65-2D7A-431B-B7FD-E67202C74043}</ProjectGuid>
@@ -149,7 +153,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
