@@ -6,12 +6,24 @@
 
 #define BENCH_ITERATIONS 100000000
 
-size_t myrand(unsigned long long *state)
+/******************************************************************************
+ * This is a typical LCG random function like 'rand()'. I define my own only
+ * so that results will be consistent across all platforms, that I have a
+ * 64-bit version, and so that that state is explicit instead of implicit.
+ ******************************************************************************/
+static size_t 
+myrand(unsigned long long *state)
 {
     *state = *state * 6364136223846793005UL + 1442695040888963407UL;
     return (size_t)((*state)>>16);
 }
-void randomize(size_t array[], size_t size)
+
+/******************************************************************************
+ * This takes a pointer-chasing array and randomizes the order in which the
+ * pointers will be chased.
+ ******************************************************************************/
+static void
+pointer_chase_randomize(size_t array[], size_t size)
 {
     size_t i;
     unsigned long long seed = 0;
@@ -39,10 +51,10 @@ void randomize(size_t array[], size_t size)
     }
 }
 
-void bench(unsigned size, unsigned half, unsigned quarter)
+void bench(size_t size, unsigned half, unsigned quarter)
 {
     size_t *array;
-    size_t count = (1<<size)/sizeof(size_t);
+    size_t count = (1UL<<size)/sizeof(size_t);
     size_t iterations = BENCH_ITERATIONS/size;
     size_t i;
     size_t index = 0;
@@ -60,7 +72,7 @@ void bench(unsigned size, unsigned half, unsigned quarter)
         fprintf(stderr, "out of memory: malloc(%llu)\n", (unsigned long long)count * sizeof(size_t));
         exit(1);
     }
-    randomize(array, count);
+    pointer_chase_randomize(array, count);
     
     start = pixie_gettime();
     for (i=0; i<iterations; i++)
@@ -85,10 +97,11 @@ int mainx(int argc, char *argv[])
     size_t array[16];
     size_t i;
     
+
     UNUSEDPARM(argc);
     UNUSEDPARM(argv);
     
-    randomize(array, 16);
+    pointer_chase_randomize(array, 16);
     
     for (i=0; i<sizeof(array)/sizeof(array[0]); i++) {
         printf("%2u ", (unsigned)i);
