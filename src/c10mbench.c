@@ -1,5 +1,6 @@
 #include "c10mbench.h"
 #include "pixie-threads.h"
+#include "unusedparm.h"
 #include <stdio.h>
 
 /*
@@ -47,6 +48,9 @@ main(int argc, char *argv[])
 {
     unsigned cpu_count;
     
+    UNUSEDPARM(argc);
+    UNUSEDPARM(argv);
+    
     /* Grab the number of CPUs. We want to run benchmarks on as many CPUs as
      * possible in order to test scaling */
     cpu_count = pixie_cpu_get_count();
@@ -63,6 +67,7 @@ main(int argc, char *argv[])
 
     bench_mainmem(cpu_count, MemBench_MaxRateHuge);
     bench_mainmem(cpu_count, MemBench_PointerChaseHuge);
+    //bench_mainmem(cpu_count, MemBench_CmovChase);
     bench_mainmem(cpu_count, MemBench_MaxRate);
     bench_mainmem(cpu_count, MemBench_PointerChase);
     bench_cache_bounce(cpu_count, CacheBench_Add);

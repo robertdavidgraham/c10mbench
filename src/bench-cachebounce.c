@@ -2,6 +2,7 @@
 #include "pixie-timer.h"
 #include "pixie-threads.h"
 #include "rte-ring.h"
+#include "unusedparm.h"
 #include <stdlib.h>
 
 #define BENCH_ITERATIONS2 ((BENCH_ITERATIONS)*10)
@@ -31,6 +32,7 @@ static void
 worker_locked_add(void *parms)
 {
     size_t i;
+    UNUSEDPARM(parms);
     for (i=0; i<BENCH_ITERATIONS2; i++) {
         pixie_locked_add_u32(&result, 1);
     }
@@ -42,6 +44,7 @@ static void
 worker_add(void *parms)
 {
     size_t i;
+    UNUSEDPARM(parms);
     for (i=0; i<BENCH_ITERATIONS2; i++) {
         result++;
     }

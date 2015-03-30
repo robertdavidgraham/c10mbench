@@ -23,6 +23,8 @@ bench_funcall(unsigned cpu_count, void (*add_two_numbers)(volatile unsigned *a, 
 enum {
     MemBench_PointerChase,
     MemBench_PointerChaseHuge,
+    MemBench_CmovChase,
+    MemBench_CmovChaseHuge,
     MemBench_MaxRate,
     MemBench_MaxRateHuge,
     

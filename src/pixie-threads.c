@@ -24,7 +24,7 @@
 #ifdef _MSC_VER
 #define UNUSEDPARM(x) x
 #else
-#define UNUSEDPARM(x)
+#define UNUSEDPARM(x) (x)=(x)
 #endif
 #endif
 
@@ -90,6 +90,11 @@ pixie_cpu_set_affinity(unsigned processor)
     if (x != 0) {
         fprintf(stderr, "set_affinity: returned error linux:%d\n", errno);
     }
+#elif defined(__APPLE__)
+    /* Mac OS X doesn't allow setting processor affinity */
+    UNUSEDPARM(processor);
+#else
+#error platform undefined
 #endif
 }
 
@@ -187,6 +192,7 @@ pixie_begin_thread(
 
     typedef void *(*PTHREADFUNC)(void*);
     pthread_t thread_id;
+    UNUSEDPARM(flags);
     pthread_create(
                           &thread_id,
                           NULL,

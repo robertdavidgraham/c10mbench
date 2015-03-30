@@ -15,15 +15,20 @@
 
 static uint64_t verifier;
 
+struct WorkerParms
+{
+    void (*addx)(volatile unsigned *a, unsigned b);
+};
+
 /******************************************************************************
  ******************************************************************************/
 static void
-worker_thread(void *parms)
+worker_thread(void *v_parms)
 {
     size_t i;
     unsigned result = 0;
-    
-    void (*addx)(volatile unsigned *a, unsigned b) = parms;
+    struct WorkerParms *parms = (struct WorkerParms *)v_parms;
+    void (*addx)(volatile unsigned *a, unsigned b) = parms->addx;
     
     for (i=0; i<BENCH_ITERATIONS2; i++) {
         addx(&result, 1);
@@ -40,6 +45,10 @@ bench_funcall(unsigned cpu_count, void (*addx)(volatile unsigned *a, unsigned b)
 {
     unsigned i;
     
+    struct WorkerParms parms[1];
+    
+    parms->addx = addx;
+    
     for (i=0; i<cpu_count; i++) {
         unsigned j;
         double ellapsed;
@@ -52,7 +61,7 @@ bench_funcall(unsigned cpu_count, void (*addx)(volatile unsigned *a, unsigned b)
         
         start = pixie_gettime();
         for (j=0; j<=i; j++) {
-            thread_handles[thread_count++] = pixie_begin_thread(worker_thread, 0, addx);
+            thread_handles[thread_count++] = pixie_begin_thread(worker_thread, 0, parms);
         }
         for (j=0; j<thread_count; j++)
             pixie_join(thread_handles[j], 0);

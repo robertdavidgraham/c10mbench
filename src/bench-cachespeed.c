@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "pixie-timer.h"
 #include "pixie-threads.h"
+#include "unusedparm.h"
 
 #define BENCH_ITERATIONS 100000000
 
@@ -68,13 +69,13 @@ void bench(unsigned size, unsigned half, unsigned quarter)
     ellapsed = (stop-start)/1000000.0;
     //printf("%llu: %llu %7.3f\n", (unsigned long long)index, stop - start, ellapsed);
     speed = iterations*1.0/ellapsed;
-    printf("%-12s, %2u%s,  %7llu,  %7.1f\n",
+    printf("%-12s, %2u%s,  %7llu,  %7.1f\n %.0u",
            test_name,
            (unsigned)size,
            quarter?(half?".75":".25"):(half?".50":".00"),
            (unsigned long long)count*sizeof(size_t)/1024UL,
            1000000000.0/speed,
-           index);
+           (unsigned)index);
     free(array);
 
 }
@@ -83,6 +84,9 @@ int mainx(int argc, char *argv[])
 {
     size_t array[16];
     size_t i;
+    
+    UNUSEDPARM(argc);
+    UNUSEDPARM(argv);
     
     randomize(array, 16);
     
@@ -101,5 +105,5 @@ int mainx(int argc, char *argv[])
         bench(i, 1, 0);
         bench(i, 1, 1);
     }
-    
+    return 0;
 }

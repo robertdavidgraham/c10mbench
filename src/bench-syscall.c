@@ -2,6 +2,7 @@
 #include "pixie-timer.h"
 #include "pixie-threads.h"
 #include "rte-ring.h"
+#include "unusedparm.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -25,6 +26,7 @@ worker_thread(void *parms)
     size_t i;
     unsigned result = 0;
     
+    UNUSEDPARM(parms);
     for (i=0; i<BENCH_ITERATIONS2; i++) {
 #ifdef WIN32
         result += read(0,0,0);
